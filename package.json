@@ -1,5 +1,6 @@
 {
   "name": "findme_backend",
+  "type": "module",
   "version": "1.0.0",
   "description": "backend api for findme app",
   "main": "server.js",
