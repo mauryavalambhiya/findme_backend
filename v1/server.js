@@ -42,15 +42,17 @@ server.use(App);
 
 
 // === START UP SERVER ===
-const serverInstance =  server.listen(PORT, () =>
-    console.log(`Server running on http://localhost:${PORT}`)
-);
 
-serverInstance .on('close', async () => {
-    console.log('Server closed unexpectedly. Performing cleanup or reconnection logic...');
-    await client.disconnect()
+const serverInstance =  server.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`)
     // Perform your cleanup or reconnection operations here
 });
+
+
+serverInstance.on('close', async () => {
+    console.log('Server closed unexpectedly. Performing cleanup or reconnection logic...');
+    await client.disconnect()}
+    )
 
 process.on('SIGTERM',  () => {
     console.log('Received SIGTERM signal. Performing cleanup before restart...');
