@@ -63,6 +63,18 @@ const UserSchema = new mongoose.Schema(
             required: true,
             default: "0x01",
         },
+        freelisting_enable : {
+            type: Boolean,
+            default: false,
+        },
+        product_id_list : {
+            type: Array,
+            require : false,
+        },
+        profile_id_list : {
+            type: Array,
+            require : false,
+        }
     },
     {
         timestamps: true

@@ -11,7 +11,7 @@ export async function LoginwithOtp(req, res) {
     // const { email } = req.body;
     const phone_number = req.body.phone_number
     const inpt_otp = req.body.otp
-    const redirect_url = req.body.redirect_url
+    var redirect_url = req.body.redirect_url
     
     if (redirect_url == null || redirect_url == undefined || redirect_url == "") {
         redirect_url = "/"
@@ -67,8 +67,8 @@ export async function onBoard(req, res) {
 
     console.log("onBoard")
     // const length = 6
-    const phone_number = req.body.phone_number
-    const redirect_url = req.body.redirect_url
+    const phone_number = req.body.phone_number.toString()
+    var redirect_url = req.body.redirect_url
 
     if (redirect_url == null || redirect_url == undefined || redirect_url == "") {
         redirect_url = "/"
