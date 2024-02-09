@@ -72,7 +72,7 @@ export async function EditProfile(req, res) {
   var main_category = req.body.main_category.toString();
   var sub_category = req.body.sub_category.toString();
 
-  var profile = Profile.findOne({ _id: business_id });
+  var profile = Profile.findOne({ _id: business_id, user_id : id});
   if (profile != null) {
     const updated_profile = await Profile.updateOne(
       { _id: business_id },
