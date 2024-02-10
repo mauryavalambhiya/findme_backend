@@ -3,8 +3,11 @@ import jwt from "jsonwebtoken";
 import {ckeckBlackList as checkBlackList} from "../external_function/redisLogout/blackListCheck.js"
 
 export async function Verify(req, res, next) {
-    const origin = req.headers["origin"]
-    if (origin == "x03467") {
+    const user_agent = req.headers['user-agent']
+    console.log("user-agent :- " + user_agent)
+
+    const origin = req.headers["origin_private"]
+    if (origin == process.env.ORIGIN_PRIVATE) {
         try {
             const authHeader = req.headers["cookie"]; // get the session cookie from request header
             // console.log("Header :- " + authHeader)
@@ -110,8 +113,33 @@ export async function Verify(req, res, next) {
                 message: "Internal Server Error",
             });
         }
-    }else if(origin == "x07867"){
+    }else if(origin == process.env.ORIGIN_PUBLIC){
         const APIKEY = req.headers["API_KEY"]
+        if (APIKEY == process.env.API_KEY_PUBLIC){
+            next();
+        }
+        else{
+            res.status(503).json({
+                status: "error",
+                code: 500,
+                data: [],
+                message: "Wrong API Key",
+            });
+        }
+    }
+    else if(origin == process.env.ORIGIN_PUBLIC_NET){
+        const APIKEY = req.headers["API_KEY"]
+        if (APIKEY == process.env.API_KEY_PUBLIC_NET){
+            next();
+        }
+        else{
+            res.status(503).json({
+                status: "error",
+                code: 500,
+                data: [],
+                message: "Wrong API Key",
+            });
+        }
     }
     else{
         res.status(503).json({
@@ -121,7 +149,6 @@ export async function Verify(req, res, next) {
             message: "Internal Server Error",
         });
     }
-    
 }
 
 export default Verify;

@@ -1,6 +1,7 @@
 import express from "express";
 import {onBoard, LoginwithOtp, Logout} from "../controllers/auth.js";
 import Validate from "../middleware/validate.js";
+import Verify from "../middleware/verify.js";
 import { check } from "express-validator";
 
 const router = express.Router();
@@ -32,6 +33,7 @@ router.post(
 router.post(
     "/logout",
     Validate,
+    Verify,
     Logout
 );
 
