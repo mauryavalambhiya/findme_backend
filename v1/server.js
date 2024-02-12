@@ -1,12 +1,19 @@
 import express from "express";
 import cors from "cors";
 import { PORT, URI } from "./config/config.js";
-import mongoose from "mongoose";
+
 import App from "./routes/root.js"
 import { client } from './external_function/redisLogout/redisClient.js'
+import { mongoose, connectToDatabase } from "./external_function/mongo/mongo_connect.js";
 
 const server = express();
 // const PORT = process.env.PORT || 5000
+
+const connectionOptions = {
+    // Other connection options...
+    // useCreateIndex: true,
+};
+
 const corsOptions = {
     origin : [process.env.FRONTEND_URL,'http://localhost:5173'],
     methods: 'GET,POST',
@@ -18,17 +25,8 @@ server.disable("x-powered-by");
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 
-mongoose.promise = global.Promise;
-mongoose.set("strictQuery", false);
-mongoose
-    // .connect(process.env.URI, {
-    //     useNewUrlParser: true,
-    //     useUnifiedTopology: true,
-    // })
-    .connect(URI)
-    .then(console.log("Connected to database"))
-    .catch((err) => console.log(err));
-
+// Call connectToDatabase to establish the connection
+connectToDatabase();
 
 // await client.set("Test-key", "Test-value")
 // const val = await client.get("Test-key")
@@ -51,8 +49,9 @@ const serverInstance =  server.listen(PORT, () => {
 
 serverInstance.on('close', async () => {
     console.log('Server closed unexpectedly. Performing cleanup or reconnection logic...');
-    await client.disconnect()}
-    )
+    await client.disconnect()
+    await mongoose.disconnect()
+})
 
 process.on('SIGTERM',  () => {
     console.log('Received SIGTERM signal. Performing cleanup before restart...');
@@ -60,6 +59,7 @@ process.on('SIGTERM',  () => {
     serverInstance .close( async () => {
         console.log('Server closed gracefully');
         await client.disconnect()
+        await mongoose.disconnect()
         process.exit(0);
     });
 });

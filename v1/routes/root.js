@@ -3,6 +3,11 @@ import Auth from './auth.js';
 import ImageService from './image_services.js';
 import Admin from './admin.js';
 import Verify from "../middleware/verify.js";
+import User from "../models/User.js"
+import jwt from "jsonwebtoken";
+import { mongoose, connectToDatabase } from "../external_function/mongo/mongo_connect.js";
+
+
 const app = express(); // Create an app object
 
 app.disable("x-powered-by"); // Reduce fingerprinting (optional)
@@ -21,10 +26,34 @@ app.get("/v1", (req, res) => {
         });
     }
 });
-app.get("/v1/user", Verify, (req, res) => {
-    res.status(200).json({
+app.get("/v1/user", Verify, async (req, res) => {
+    const authHeader = req.headers["cookie"];
+    const cookie = authHeader.split("=")[1];
+    const decoded = jwt.decode(cookie);
+    const id = decoded.id;
+
+    // initialize a session
+    const session = await mongoose.startSession();
+    //start transaction
+    session.startTransaction();
+    var result = ""
+    try { 
+        result  = await User.findOne({ _id: id }).session(session);
+        // ... Additional transactional operations
+      } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        return res.status(501).json({
+            status: "Error",
+            message: error.message
+        });
+      } 
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.status(200).json({
         status: "success",
-        message: "Welcome to the your Dashboard!",
+        message: result,
     });
 });
 
