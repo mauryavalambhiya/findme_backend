@@ -67,13 +67,14 @@ const UserSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
-        product_id_list : {
-            type: Array,
-            require : false,
-        },
         profile_id_list : {
             type: Array,
             require : false,
+        },
+        favorites : {
+            type :Array,
+            default : [],
+            required : false,
         }
     },
     {

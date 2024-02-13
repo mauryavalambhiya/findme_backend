@@ -1,5 +1,6 @@
 import express from "express"; // import the express module
 import Auth from './auth.js';
+import UserController from './user.js';
 import ImageService from './image_services.js';
 import Admin from './admin.js';
 import Verify from "../middleware/verify.js";
@@ -60,4 +61,5 @@ app.get("/v1/user", Verify, async (req, res) => {
 app.use('/v1/auth', Auth);
 app.use('/v1/image-service', ImageService);
 app.use('/v1/admin', Admin);
+app.use('/v1/user', UserController);
 export default app;

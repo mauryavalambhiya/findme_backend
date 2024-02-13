@@ -53,6 +53,7 @@ export async function AddProfile(req, res) {
     // }
   });
   const result = await profile.save();
+  const isUpdated = await updateProfileIdList(id);
   return res.status(200).json({
     massage: result,
   });
@@ -111,6 +112,7 @@ export async function EditProfile(req, res) {
         // }
       }
     );
+    await updateProfileIdList(id)
     return res.status(200).json({
       profile: updated_profile,
       massage : "Profile updated successfully"
@@ -132,6 +134,7 @@ export async function DeleteProfile(req, res) {
   var profile = Profile.findOne({ _id: business_id, user_id : id});
   if (profile != null) {
     const deleted_profile = await profile.deleteOne();
+    await updateProfileIdList(id)
     return res.status(200).json({
       profile: deleted_profile,
       massage : "Profile deleteed successfully"
@@ -164,3 +167,28 @@ export async function GetProfiles(req, res) {
   //   }
   // }
 }
+
+async function updateProfileIdList(user_id){
+  //   console.log("updateProfile");
+  //   const enabledProfiles = await Profile.find({ user_id: user_id });
+  //   const enabledProfileIds = enabledProfiles.map(profile => profile._id);
+  //   console.log("enabledProfiles :- " + enabledProfiles)
+  //   console.log("enabledProfileIds :- " + enabledProfileIds)
+  //   const user = await User.findById({ user_id }).exec();
+  //   user.profile_id_list = enabledProfileIds
+  //   await user.save();
+  // return true;
+
+  console.log("updateProfile");
+  const enabledProfiles = await Profile.find({ user_id: user_id });
+  const enabledProfileIds = enabledProfiles.map(profile => profile._id);
+  console.log("enabledProfiles :- ", enabledProfiles);
+  console.log("enabledProfileIds :- ", enabledProfileIds);
+  
+  // Use findById without {}
+  const user = await User.findById(user_id).exec();
+  user.profile_id_list = enabledProfileIds;
+  await user.save();
+  return true;
+}
+

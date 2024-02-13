@@ -45,9 +45,12 @@ const ProfileSchema = new mongoose.Schema(
             required : true,
         },
         ratings : {
-            type : Number,
-            required : false,
-            default : null
+            ratings_arr : {
+                type : [Number],
+                default : [],
+                required : true,                
+            },
+            score : {type : Number, default : 0, required : true}
         },
         open_time : {
             type : Number,
