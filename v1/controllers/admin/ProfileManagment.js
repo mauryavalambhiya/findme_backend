@@ -9,6 +9,8 @@ export async function AddProfile(req, res) {
   const decoded = jwt.decode(cookie);
   const id = decoded.id;
   var business_name = req.body.business_name.toString();
+  var business_description = req.body.business_description.toString();
+  const tegs_list  = req.body.tegs_list
   var business_address = req.body.business_address.toString();
   var business_number = req.body.business_number.toString();
   var business_image = req.body.business_image.toString();
@@ -18,6 +20,8 @@ export async function AddProfile(req, res) {
 
   const profile = new Profile({
     business_name: business_name,
+    business_description: business_description,
+    tegs_list:tegs_list,
     business_address: business_address,
     gps_location: {
       type: "Point",
@@ -66,9 +70,11 @@ export async function EditProfile(req, res) {
   const id = decoded.id;
   var business_id = req.body.business_id.toString();
   var business_name = req.body.business_name.toString();
+  var business_description = req.body.business_description.toString();
   var business_address = req.body.business_address.toString();
   var business_number = req.body.business_number.toString();
   var business_image = req.body.business_image.toString();
+  const tegs_list  = req.body.tegs_list
   // var gps_location = req.body.gps_location
   var main_category = req.body.main_category.toString();
   var sub_category = req.body.sub_category.toString();
@@ -79,6 +85,8 @@ export async function EditProfile(req, res) {
       { _id: business_id },
       {
         business_name: business_name,
+        business_description: business_description,
+        tegs_list:tegs_list,
         business_address: business_address,
         gps_location: {
           type: "Point",
@@ -180,7 +188,7 @@ async function updateProfileIdList(user_id){
   // return true;
 
   console.log("updateProfile");
-  const enabledProfiles = await Profile.find({ user_id: user_id });
+  const enabledProfiles = await Profile.find({ user_id: user_id,  });
   const enabledProfileIds = enabledProfiles.map(profile => profile._id);
   console.log("enabledProfiles :- ", enabledProfiles);
   console.log("enabledProfileIds :- ", enabledProfileIds);

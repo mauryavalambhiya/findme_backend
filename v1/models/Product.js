@@ -18,7 +18,7 @@ const ProductSchema = new mongoose.Schema({
   },
   tegs_list: {
     type: [String],
-    require: false,
+    require: true,
     default: [],
   },
   product_image: {

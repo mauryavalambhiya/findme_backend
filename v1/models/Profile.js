@@ -7,6 +7,11 @@ const ProfileSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+        business_description : {
+            type: String,
+            required: true,
+            default : ""
+        },
         business_image : {
             type: String,
             required: true
@@ -61,7 +66,12 @@ const ProfileSchema = new mongoose.Schema(
             type : Number,
             required : false,
             default : 20.30
-        }
+        },
+        tegs_list: {
+            type: [String],
+            require: true,
+            default: [],
+        },
     },
     {
         timestamps: true
