@@ -6,6 +6,7 @@ export async function Verify(req, res, next) {
     const user_agent = req.headers['user-agent']
     console.log("user-agent :- " + user_agent)
 
+    
     const origin = req.headers["origin_private"]
     if (origin == process.env.ORIGIN_PRIVATE) {
         try {
