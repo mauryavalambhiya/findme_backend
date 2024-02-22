@@ -75,6 +75,11 @@ const UserSchema = new mongoose.Schema(
             type :Array,
             default : [],
             required : false,
+        },
+        refreshToken : {
+            type: String,
+            required: false,
+            default: "",
         }
     },
     {

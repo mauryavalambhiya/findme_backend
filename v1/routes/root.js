@@ -7,6 +7,7 @@ import Verify from "../middleware/verify.js";
 import User from "../models/User.js"
 import jwt from "jsonwebtoken";
 import { mongoose, connectToDatabase } from "../external_function/mongo/mongo_connect.js";
+import getAccessToken from "../config/getAccessToken.js";
 
 
 const app = express(); // Create an app object
@@ -28,8 +29,7 @@ app.get("/v1", (req, res) => {
     }
 });
 app.get("/v1/user", Verify, async (req, res) => {
-    const authHeader = req.headers["cookie"];
-    const cookie = authHeader.split("=")[1];
+    const cookie = getAccessToken(req)
     const decoded = jwt.decode(cookie);
     const id = decoded.id;
 

@@ -3,12 +3,13 @@ import Profile from '../../models/Profile.js'
 import Product from '../../models/Product.js'
 import jwt from "jsonwebtoken";
 import { mongoose, connectToDatabase } from "../../external_function/mongo/mongo_connect.js";
+import getAccessToken from "../../config/getAccessToken.js"
+// import  getAccessToken  from "../config/getAccessToken.js";
 
 
 
 export async function AddProduct(req, res){
-    const authHeader = req.headers["cookie"];
-    const cookie = authHeader.split("=")[1];
+    const cookie = getAccessToken(req)
     const decoded = jwt.decode(cookie);
     const id = decoded.id;
 
@@ -65,8 +66,7 @@ export async function AddProduct(req, res){
 }
 
 export async function EditProduct(req, res){
-    const authHeader = req.headers["cookie"];
-    const cookie = authHeader.split("=")[1];
+    const cookie = getAccessToken(req)
     const decoded = jwt.decode(cookie);
     const id = decoded.id;
 
@@ -204,8 +204,7 @@ export async function EditProduct(req, res){
 }
 
 export async function DeleteProduct(req, res){
-    const authHeader = req.headers["cookie"];
-    const cookie = authHeader.split("=")[1];
+    const cookie = getAccessToken(req)
     const decoded = jwt.decode(cookie);
     const id = decoded.id;
     var product_id = req.body.product_id.toString();
@@ -258,8 +257,7 @@ export async function DeleteProduct(req, res){
 }
 
 export async function GetProduct(req, res){
-    const authHeader = req.headers["cookie"];
-    const cookie = authHeader.split("=")[1];
+    const cookie = getAccessToken(req)
     const decoded = jwt.decode(cookie);
     const id = decoded.id;
 

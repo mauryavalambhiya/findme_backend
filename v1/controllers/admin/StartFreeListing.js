@@ -1,11 +1,10 @@
 import User from "../../models/User.js";
 import jwt from "jsonwebtoken";
-
+import getAccessToken from "../../config/getAccessToken.js"
 
 // enable freelisting, initiat product_id_list, initiat profile_id_list
 export async  function StartFreeListing(req, res) {
-    const authHeader = req.headers["cookie"];
-    const cookie = authHeader.split("=")[1];
+    const cookie = getAccessToken(req)
     const decoded = jwt.decode(cookie);
     const id = decoded.id
 

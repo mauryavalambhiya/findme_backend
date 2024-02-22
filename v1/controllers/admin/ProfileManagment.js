@@ -2,11 +2,11 @@ import User from "../../models/User.js";
 import Profile from "../../models/Profile.js";
 import jwt from "jsonwebtoken";
 import mongoose, { mongo } from "mongoose";
+import getAccessToken from "../../config/getAccessToken.js";
 
 export async function AddProfile(req, res) {
-  const authHeader = req.headers["cookie"];
-  const cookie = authHeader.split("=")[1];
-  const decoded = jwt.decode(cookie);
+  const cookie = getAccessToken(req)
+  const decoded = jwt.decode(cookie)
   const id = decoded.id;
   var business_name = req.body.business_name.toString();
   var business_description = req.body.business_description.toString();
@@ -64,9 +64,8 @@ export async function AddProfile(req, res) {
 }
 
 export async function EditProfile(req, res) {
-  const authHeader = req.headers["cookie"];
-  const cookie = authHeader.split("=")[1];
-  const decoded = jwt.decode(cookie);
+  const cookie = getAccessToken(req)
+  const decoded = jwt.decode(cookie)
   const id = decoded.id;
   var business_id = req.body.business_id.toString();
   var business_name = req.body.business_name.toString();
@@ -133,9 +132,8 @@ export async function EditProfile(req, res) {
 }
 
 export async function DeleteProfile(req, res) {
-  const authHeader = req.headers["cookie"];
-  const cookie = authHeader.split("=")[1];
-  const decoded = jwt.decode(cookie);
+  const cookie = getAccessToken(req)
+  const decoded = jwt.decode(cookie)
   const id = decoded.id;
   var business_id = req.body.business_id.toString();
   console.log(id)
@@ -154,9 +152,8 @@ export async function DeleteProfile(req, res) {
 }
 
 export async function GetProfiles(req, res) {
-  const authHeader = req.headers["cookie"];
-  const cookie = authHeader.split("=")[1];
-  const decoded = jwt.decode(cookie);
+  const cookie = getAccessToken(req)
+  const decoded = jwt.decode(cookie)
   const id = decoded.id;
 
   let data = await Profile.find({user_id : id})

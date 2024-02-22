@@ -1,5 +1,5 @@
 import express from "express";
-import {onBoard, LoginwithOtp, Logout} from "../controllers/auth.js";
+import {onBoard, LoginwithOtp, Logout, HandleRefreshToken} from "../controllers/auth.js";
 import Validate from "../middleware/validate.js";
 import Verify from "../middleware/verify.js";
 import { check } from "express-validator";
@@ -36,5 +36,7 @@ router.post(
     Verify,
     Logout
 );
+
+router.get('/refresh', HandleRefreshToken);
 
 export default router;
