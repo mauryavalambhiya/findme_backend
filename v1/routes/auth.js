@@ -33,7 +33,6 @@ router.post(
 router.post(
     "/logout",
     Validate,
-    Verify,
     Logout
 );
 

@@ -74,7 +74,7 @@ export async function EditProfile(req, res) {
   var business_number = req.body.business_number.toString();
   var business_image = req.body.business_image.toString();
   const tegs_list  = req.body.tegs_list
-  // var gps_location = req.body.gps_location
+  var gps_location = req.body.gps_location
   var main_category = req.body.main_category.toString();
   var sub_category = req.body.sub_category.toString();
 
@@ -89,7 +89,7 @@ export async function EditProfile(req, res) {
         business_address: business_address,
         gps_location: {
           type: "Point",
-          coordinates: [22.2873299, 70.7986046],
+          coordinates: gps_location,
         },
         // to be use when frontend is ready
         // gps_location : {
@@ -171,6 +171,33 @@ export async function GetProfiles(req, res) {
   //     });
   //   }
   // }
+}
+
+export async function GetProfilesById(req, res) {
+  const cookie = getAccessToken(req)
+  const decoded = jwt.decode(cookie)
+  const id = decoded.id;
+  var profile_id = req.body.profile_id.toString();
+  console.log("Profile_id :---- " + profile_id)
+
+  if( profile_id !== null && profile_id !== undefined ){
+    let data = await Profile.findOne({ user_id: id, _id: profile_id })
+
+    if ( data){
+    return res.status(200).json({
+            massage: data
+          });
+    }else{
+      return res.status(203).json({
+        massage: "Sorry no data available :("
+      });
+    }
+  }else{    
+    return res.status(203).json({
+      massage: "Sorry no data available :("
+    });
+  }
+
 }
 
 async function updateProfileIdList(user_id){

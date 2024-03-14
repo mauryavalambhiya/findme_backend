@@ -14,7 +14,7 @@ export async function LoginwithOtp(req, res) {
   // Get variables for the login process
   // const { email } = req.body;
   const phone_number = req.body.phone_number;
-  const inpt_otp = req.body.otp;
+  const input_otp = req.body.otp;
   var redirect_url = req.body.redirect_url;
 
   if (redirect_url == null || redirect_url == undefined || redirect_url == "") {
@@ -27,13 +27,13 @@ export async function LoginwithOtp(req, res) {
     console.log("WORKING");
     if (!user) {
       return res.status(501).json({
-        message: "Wrong credential, plese try again",
+        message: "Wrong credential, please try again",
       });
     }
     // if user exists
     // validate password
     const isOtpValid =
-      inpt_otp.toString() == user.otp.toString() ? true : false;
+      input_otp.toString() == user.otp.toString() ? true : false;
 
     // if not valid, return unathorized response
     if (!isOtpValid)
@@ -54,13 +54,11 @@ export async function LoginwithOtp(req, res) {
       { expiresIn: "1d" }
     );
 
-    // console.log("refreshToken :- " + refreshToken)
+    console.log("refreshToken :- " + refreshToken + "\nAccess token :- " + token)
     var user_update = await User.updateOne(
       { _id: user._id },
-      {
-        refreshToken: refreshToken,
-      }
-    ).exec();
+      { $set: { refreshToken: refreshToken }}
+    )
     // user_update.refreshToken = refreshToken;
     // const result = await user_update.save();
     res.cookie("SessionID", token, options); // set the token to response header, so that the client sends it back on each subsequent request
@@ -71,6 +69,7 @@ export async function LoginwithOtp(req, res) {
       maxAge: 24 * 60 * 60 * 1000,
     });
     res.status(200).json({
+      role : user.role,  
       accessToken: token,
       redirect_url: redirect_url,
       status: "success",
@@ -155,26 +154,18 @@ export async function HandleRefreshToken(req, res) {
       const foundUser = await User.findOne({
         refreshToken: refreshToken,
       }).exec();
-      if (!foundUser) return res.sendStatus(403); //Forbidden
+      if (!foundUser) return res.status(403).json({
+        massage: `no user found with refresh token: ${refreshToken}`
+      }); //Forbidden
       // evaluate jwt
       jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         (err, decoded) => {
-          if (err || foundUser.username !== decoded.username)
-            return res.sendStatus(403);
+          if (err || (foundUser.phone_number !== decoded.user_phoneno))
+            return res.status(403).json({massage : `${foundUser.phone_number} !== ${decoded.user_phoneno} error:- ${err.toString()} `});
           // const roles = Object.values(foundUser.roles);
           const token = foundUser.generateAccessJWTOtp();
-          // const accessToken = jwt.sign(
-          //     {
-          //         "UserInfo": {
-          //             "username": decoded.username,
-          //             "roles": roles
-          //         }
-          //     },
-          //     process.env.ACCESS_TOKEN_SECRET,
-          //     { expiresIn: '10s' }
-          // );
           let options = {
             maxAge: 20 * 60 * 1000, // would expire in 20minutes
             httpOnly: true, // The cookie is only accessible by the web server
@@ -184,6 +175,7 @@ export async function HandleRefreshToken(req, res) {
 
           res.cookie("SessionID", token, options); // set the token to response header, so that the client sends it back on each subsequent request
           res.status(200).json({
+            role : foundUser.role ,
             accessToken: token,
             // redirect_url: redirect_url,
             status: "success",
@@ -220,6 +212,7 @@ export async function Logout(req, res) {
   try {
     const refreshToken = getRefreshToken(req);
     const cookie = getAccessToken(req);
+    console.log("FROM LOGOUT")
     if (!refreshToken) return res.status(403).json({massage : "Refresh token not available"})
     if (!cookie) return res.status(403).json({massage : "access token not available"})
     jwt.verify(

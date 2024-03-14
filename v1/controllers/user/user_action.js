@@ -121,7 +121,8 @@ export async function RateShop(req, res) {
 export async function Search(req, res) {
 
   const query = req.body.search_query.toString()
-  // const gps_location = req.body.gps_location
+  const gps_location = req.body.gps_location
+  console.log("gps_location :- " + gps_location)
   await Profile.collection.createIndex({ gps_location: "2dsphere" });
 
   // var data = {
@@ -408,10 +409,13 @@ try {
   });
   const uniqueProfileIds = Array.from(new Set(profile_id_list));
   console.log(uniqueProfileIds)
+
+  const gps_location_poin = gps_location || [22.2873299, 70.7986046]
+
   const pipeline = [
     {
       $geoNear: {
-        near: { type: "Point", coordinates: [22.2873299, 70.7986046] },
+        near: { type: "Point", coordinates: gps_location_poin},
         distanceField: "distance",
         maxDistance: 15,
         spherical: true,

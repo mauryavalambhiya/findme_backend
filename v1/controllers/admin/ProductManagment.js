@@ -267,7 +267,31 @@ export async function GetProduct(req, res){
         });
 }
 
+export async function GetProductById(req, res){
+    const cookie = getAccessToken(req)
+    const decoded = jwt.decode(cookie);
+    const id = decoded.id;
+    const project_id = req.body.project_id.toString();
 
+
+    if( project_id !== null && project_id !== undefined ){
+              
+        let data = await Product.findOne({user_id : id, _id : project_id})
+        if ( data){
+        return res.status(200).json({
+                massage: data
+              });
+        }else{
+          return res.status(203).json({
+            massage: "Sorry no data available :("
+          });
+        }
+      }else{    
+        return res.status(203).json({
+          massage: "Sorry no data available :("
+        });
+      }
+}
 
 function getArrayToBeDeletedArr(arrA, arrB) {
     var result = [];

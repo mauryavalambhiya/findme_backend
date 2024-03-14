@@ -59,9 +59,9 @@ const UserSchema = new mongoose.Schema(
             max: 5,
         },
         role: {
-            type: String,
+            type: [String],
             required: true,
-            default: "0x01",
+            default: ["0x01"],
         },
         freelisting_enable : {
             type: Boolean,
@@ -128,7 +128,7 @@ UserSchema.methods.generateAccessJWTOtp = function () {
         role : this.role
     };
     return jwt.sign(payload, SECRET_ACCESS_TOKEN, {
-        expiresIn: '20m',
+        expiresIn: '10m',
     });
 };
 
