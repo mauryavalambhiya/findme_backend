@@ -14,7 +14,11 @@ export async function AddProduct(req, res){
     const id = decoded.id;
 
     var product_name = req.body.product_name.toString();
+    console.log("Body :- " + JSON.stringify(req.body));
+    // var product_disc = req.body.product_disc.toString();
     var product_disc = req.body.product_disc.toString();
+    console.log("product_disc :- " + product_disc);
+
     const profile_id_list = req.body.profile_id
     const tegs_list  = req.body.tegs_list
     const product_image = req.body.product_image.toString();
@@ -40,13 +44,21 @@ export async function AddProduct(req, res){
         if (!docs) {
             throw new Error('Document not found');
         }
-
         for (var i = 0; i < docs.length; i++) {
             console.log("Looping")
             var doc = docs[i];
             if (!doc.product_id_list.includes(result1._id)) {
                 // Push the new product ID to the product list array
                 doc.product_id_list.push(result1._id);
+                if(doc.business_description == ''){
+                    console.log("Working............." + doc.business_description)
+                    doc.business_description = "_"
+                }
+                if(doc.ratings == null || doc.ratings.ratings_arr == [] || doc.ratings.score == null ||  doc.ratings.score == undefined){
+                    console.log("Working............." + doc.ratings)
+                    doc.ratings.ratings_arr = []
+                    doc.ratings.score = 0
+                }
                 await doc.save({ session: session });
             }
         }

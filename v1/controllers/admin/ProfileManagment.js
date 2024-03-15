@@ -14,7 +14,7 @@ export async function AddProfile(req, res) {
   var business_address = req.body.business_address.toString();
   var business_number = req.body.business_number.toString();
   var business_image = req.body.business_image.toString();
-  // var gps_location = req.body.gps_location
+  var gps_location = req.body.gps_location
   var main_category = req.body.main_category.toString();
   var sub_category = req.body.sub_category.toString();
 
@@ -25,7 +25,7 @@ export async function AddProfile(req, res) {
     business_address: business_address,
     gps_location: {
       type: "Point",
-      coordinates: [22.2873299, 70.7986046],
+      coordinates: gps_location,
     },
     // to be use when frontend is ready
     // gps_location : {
