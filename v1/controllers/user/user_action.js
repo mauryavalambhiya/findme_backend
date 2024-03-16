@@ -395,7 +395,7 @@ let config = {
 
 try {
   const response = await axios.request(config);
-  console.log(JSON.stringify(response.data));
+  // console.log(JSON.stringify(response.data));
   data = response.data
 
   var profile_id_list = [];
@@ -408,7 +408,7 @@ try {
     profile_id_list = profile_id_list.concat(profile._id);
   });
   const uniqueProfileIds = Array.from(new Set(profile_id_list));
-  console.log(uniqueProfileIds)
+  // console.log(uniqueProfileIds)
 
   const gps_location_poin = gps_location || [22.2873299, 70.7986046]
 
@@ -431,7 +431,7 @@ try {
   
   try {
     const results = await Profile.aggregate(pipeline);
-    console.log(results);
+    // console.log(results);
     // Handle the results as needed
     return res.status(200).json({
       profile_id_list: results,

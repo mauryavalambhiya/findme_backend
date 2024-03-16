@@ -176,7 +176,7 @@ export async function HandleRefreshToken(req, res) {
           res.cookie("SessionID", token, options); // set the token to response header, so that the client sends it back on each subsequent request
           res.status(200).json({
             role : foundUser.role ,
-            accessToken: token,
+            // accessToken: token,
             // redirect_url: redirect_url,
             status: "success",
             message: "You have successfully logged in agin.",

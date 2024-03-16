@@ -65,7 +65,7 @@ const UserSchema = new mongoose.Schema(
         },
         freelisting_enable : {
             type: Boolean,
-            default: false,
+            default: true,
         },
         profile_id_list : {
             type: Array,

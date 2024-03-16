@@ -6,14 +6,14 @@ import getAccessToken  from "../config/getAccessToken.js";
 
 export async function Verify(req, res, next) {
     const user_agent = req.headers['user-agent']
-    // console.log("user-agent :- " + user_agent)
+    // // console.log("user-agent :- " + user_agent)
     
     const origin = req.headers["origin_private"]
     if (origin == process.env.ORIGIN_PRIVATE) {
         try {
             var authHeader = req.headers["cookie"];
             authHeader = authHeader.split(";")[0] // get the session cookie from request header
-            // console.log("Header :- " + authHeader)
+            // // // console.log("Header :- " + authHeader)
             
             if (!authHeader) {   
                 return res.sendStatus(401); 
@@ -22,10 +22,10 @@ export async function Verify(req, res, next) {
             if (!cookie) return res.status(403).json({massage : "access token not available"})
             
             jwt.verify(cookie, process.env.SECRET_ACCESS_TOKEN, async (err, decoded) => {
-                // console.log(util.inspect(req.headers, false, null, true /* enable colors */))
+                // // // console.log(util.inspect(req.headers, false, null, true /* enable colors */))
                 if (err) {
                     // if token has been altered or has expired, return an unauthorized error
-                    console.log("ERROR :-------- " + err)
+                    // console.log("ERROR :-------- " + err)
                     return res.status(403).json({ message: err.message });
                 }
             
