@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import { ObjectId } from 'mongodb';
 import getAccessToken from "../../config/getAccessToken.js"
 import axios from 'axios'
+import chalk from 'chalk';
 
 // enable freelisting, initiat product_id_list, initiat profile_id_list
 export async function AddToFavorite(req, res) {
