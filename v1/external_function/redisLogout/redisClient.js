@@ -16,10 +16,10 @@ import { createClient } from 'redis';
 // export { client };
 
 const client = createClient({
-    password: '2bgz2jfPpfE5NWVnznkZKEpbVMIXVZo6',
+    password: process.env.REDIS_PASS,
     socket: {
-        host: 'redis-18293.c267.us-east-1-4.ec2.cloud.redislabs.com',
-        port: 18293
+        host: process.env.REDIS_URL,
+        port: process.env.REDIS_PORT
     }
 });
 

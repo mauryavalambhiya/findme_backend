@@ -24,7 +24,7 @@ export async function LoginwithOtp(req, res) {
   try {
     // Check if user exists
     var user = await User.findOne({ phone_number }).select("+otp");
-    console.log("WORKING");
+    // console.log("WORKING");
     if (!user) {
       return res.status(501).json({
         message: "Wrong credential, please try again",
@@ -54,7 +54,7 @@ export async function LoginwithOtp(req, res) {
       { expiresIn: "1d" }
     );
 
-    console.log("refreshToken :- " + refreshToken + "\nAccess token :- " + token)
+    // console.log("refreshToken :- " + refreshToken + "\nAccess token :- " + token)
     var user_update = await User.updateOne(
       { _id: user._id },
       { $set: { refreshToken: refreshToken }}
@@ -76,7 +76,7 @@ export async function LoginwithOtp(req, res) {
       message: "You have successfully logged in.",
     });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     res.status(500).json({
       status: "error",
       code: 500,
@@ -88,7 +88,7 @@ export async function LoginwithOtp(req, res) {
 }
 
 export async function onBoard(req, res) {
-  console.log("onBoard");
+  // console.log("onBoard");
   // const length = 6
   const phone_number = req.body.phone_number.toString();
   var redirect_url = req.body.redirect_url;
@@ -107,9 +107,9 @@ export async function onBoard(req, res) {
         otp: otp.toString(),
         email: "",
       });
-      console.log(newUser);
+      // console.log(newUser);
       const savedUser = await newUser.save(); // save new user into the database
-      console.log("Working");
+      // console.log("Working");
       res.status(200).json({
         redirect_url: redirect_url,
         message: "Otp has been sent successfully",
@@ -120,14 +120,14 @@ export async function onBoard(req, res) {
 
       user.otp = otp; // Update the existing user's OTP
       const updatedUser = await user.save(); // Save the updated user
-      console.log("User updated:", updatedUser);
+      // console.log("User updated:", updatedUser);
       res.status(200).json({
         redirect_url: redirect_url,
         message: "Otp has been sent successfully",
       });
     }
   } catch (e) {
-    console.log(e.message);
+    // console.log(e.message);
     res.status(500).json({
       status: "error",
       code: 500,
@@ -140,7 +140,7 @@ export async function onBoard(req, res) {
 export async function HandleRefreshToken(req, res) {
   const origin = req.headers["origin_private"];
   if (origin == process.env.ORIGIN_PRIVATE) {
-    console.log("Ready");
+    // console.log("Ready");
     // const cookies = req.cookies;
     // if (!cookies?.jwt) return res.sendStatus(401);
     const refreshToken = getRefreshToken(req);
@@ -149,7 +149,7 @@ export async function HandleRefreshToken(req, res) {
         massage: "refresh token not available in request",
       }); //refresh token not available in request
     } else {
-      console.log("refreshToken :---- " + refreshToken);
+      // console.log("refreshToken :---- " + refreshToken);
 
       const foundUser = await User.findOne({
         refreshToken: refreshToken,
@@ -212,7 +212,7 @@ export async function Logout(req, res) {
   try {
     const refreshToken = getRefreshToken(req);
     const cookie = getAccessToken(req);
-    console.log("FROM LOGOUT")
+    // console.log("FROM LOGOUT")
     if (!refreshToken) return res.status(403).json({massage : "Refresh token not available"})
     if (!cookie) return res.status(403).json({massage : "access token not available"})
     jwt.verify(
@@ -232,12 +232,12 @@ export async function Logout(req, res) {
                 sameSite: "None",
                 secure: true,
               });
-              console.log("Responce sent ");
+              // console.log("Responce sent ");
               return res.sendStatus(204);
             }
             foundUser.refreshToken = "";
             const result = await foundUser.save();
-            console.log("foundUser :-  " + "OKKKK");
+            // console.log("foundUser :-  " + "OKKKK");
             res.clearCookie("jwt", {
               httpOnly: true,
               sameSite: "None",
@@ -257,7 +257,7 @@ export async function Logout(req, res) {
         }
       );
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     return res.status(500).json({
       status: "error",
       code: 500,

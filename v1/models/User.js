@@ -33,7 +33,7 @@ const UserSchema = new mongoose.Schema(
         },
         profile_image : {
             type: String,
-            default: "_",
+            default: "https://www.alucoildesign.com/assets/pages/media/profile/profile.jpg",
             required: false,
         },
         email: {
